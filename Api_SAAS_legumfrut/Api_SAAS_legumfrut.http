@@ -1,0 +1,6 @@
+@Api_SAAS_legumfrut_HostAddress = http://localhost:5231
+
+GET {{Api_SAAS_legumfrut_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
