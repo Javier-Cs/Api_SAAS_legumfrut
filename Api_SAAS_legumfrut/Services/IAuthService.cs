@@ -6,6 +6,6 @@ namespace Api_SAAS_legumfrut.Services
 {
     public interface IAuthService
     {
-        Task<LoginResponseDto?> LoginAsync(LoginRequestDto loginRequest);
+        Task<LoginResponseDto?> LoginAsync(LoginRequestDto loginRequest, CancellationToken ct);
     }
 }

@@ -5,6 +5,6 @@ namespace Api_SAAS_legumfrut.Repository
 {
     public interface IAuthRepository
     {
-        Task<UserWithEmpresa?> GetByEmailWithEmpresaAsync(string email);
+        Task<UserWithEmpresa?> GetByEmailWithEmpresaAsync(string email, CancellationToken ct);
     }
 }

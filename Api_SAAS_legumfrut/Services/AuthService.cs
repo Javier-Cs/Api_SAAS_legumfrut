@@ -20,10 +20,10 @@ namespace Api_SAAS_legumfrut.Services
             _authRepository = authRepository;
             _config = config;
         }
-        public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto loginRequest)
+        public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto loginRequest, CancellationToken ct = default)
         {
             // buscamos Usuario
-            var data = await _authRepository.GetByEmailWithEmpresaAsync(loginRequest.Email);
+            var data = await _authRepository.GetByEmailWithEmpresaAsync(loginRequest.Email, ct);
             if (data == null) {
                 throw new Exception("Usuario no encontrado o no existe XD");
             }
@@ -31,13 +31,23 @@ namespace Api_SAAS_legumfrut.Services
             var userObtenido = data.user;
 
             // Validar estado
-            if (!userObtenido.Estado || !userObtenido.IsDeleted) {
+            if (!userObtenido.Estado || userObtenido.IsDeleted) {
                 throw new Exception("el usuario esta inactivo XD");
             }
+
+            
 
             if (!string.IsNullOrEmpty(loginRequest.NombreEmpresa) && loginRequest.NombreEmpresa != data.NombreEmpresa) {
                 throw new Exception("La emprese es incorrecta OJO");
             }
+
+            /*if (userObtenido.IdEmpresa != loginRequest.IdEmpresa) {
+                throw new Exception("La empresa es incorrecta OJO");
+            }
+            */
+            var hash = BCrypt.Net.BCrypt.HashPassword("texto plano");
+            Console.WriteLine(hash);
+
 
             if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, userObtenido.PassHash))
                 throw new Exception("Credenciales incorrectas OJO");

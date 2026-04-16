@@ -16,10 +16,25 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
+
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<AuthService>();
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAstroApp",
+        policy => 
+        {
+            policy.WithOrigins(
+                "http://localhost:1975",
+                "https://saas.legumfrutsa.com")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+            
+        });
+    }
+);
 
 
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -57,15 +72,31 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+/* Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+}*/
+
+app.UseSwagger();
+//app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Operaciones V1");
+    c.RoutePrefix = "swagger";
+});
 
 // Redirige automáticamente peticiones HTTP a HTTPS (seguridad).
 app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseRouting();
+app.UseCors("AllowAstroApp");
 
 //validacion de token
 app.UseAuthentication();

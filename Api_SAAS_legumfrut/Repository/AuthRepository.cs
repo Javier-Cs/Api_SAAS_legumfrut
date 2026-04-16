@@ -1,4 +1,5 @@
 ﻿using Api_SAAS_legumfrut.Auth;
+using Api_SAAS_legumfrut.Data;
 using Api_SAAS_legumfrut.Entities;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -8,20 +9,22 @@ namespace Api_SAAS_legumfrut.Repository
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly IConfiguration _config;
+        //private readonly IConfiguration _config;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-
-        public AuthRepository(IConfiguration config) { 
-            _config = config;
+        public AuthRepository(/*IConfiguration config,*/ ISqlConnectionFactory sqlConnectionFactory)
+        {
+            //_config = config;
+            _sqlConnectionFactory = sqlConnectionFactory;
         }
 
         // esta es otra opcion de repositorio pero no usa el dto que recibe el controller, 
         // por que se usaria otro dto?
-        public async Task<UserWithEmpresa?> GetByEmailWithEmpresaAsync(string email)
+        public async Task<UserWithEmpresa?> GetByEmailWithEmpresaAsync(string email, CancellationToken ct = default)
         {
-            using IDbConnection db = new SqlConnection(
+            /*using IDbConnection db = new SqlConnection(
                 _config.GetConnectionString("DefaultConnection")
-            );
+            );*/
 
             var sql = @"
             SELECT 
@@ -40,7 +43,12 @@ namespace Api_SAAS_legumfrut.Repository
             WHERE u.email = @Email
             ";
 
-            var result = await db.QueryAsync<User, string, UserWithEmpresa>(
+            //using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            //await conn.OpenAsync();
+
+            using var connection = _sqlConnectionFactory.CreateConnection();
+
+            var result = await connection.QueryAsync<User, string, UserWithEmpresa>(
                 sql,
                 (user, nombreEmpresa) =>
                 {
