@@ -28,6 +28,7 @@ builder.Services.AddCors(options => {
         {
             policy.WithOrigins(
                 "http://localhost:1975",
+                "http://localhost:4321",
                 "https://saas.legumfrutsa.com")
             .AllowAnyHeader()
             .AllowAnyMethod();

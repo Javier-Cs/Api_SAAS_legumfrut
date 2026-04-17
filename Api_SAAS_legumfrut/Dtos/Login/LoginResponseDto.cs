@@ -12,6 +12,7 @@
         // Contexto de seguridad
         public string Rol { get; set; } = string.Empty;
         public string Usuario { get; set; } = string.Empty;
+        public int IdUser { get; set; } 
         public bool Estado { get; set; }
     }
 }

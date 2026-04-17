@@ -19,6 +19,7 @@ namespace Api_SAAS_legumfrut.Utils
                 Expiration = expiration,
                 IdEmpresa = user.IdEmpresa,
                 NombreEmpresa = nombreEmpresa,
+                IdUser = user.IdUser,
                 Rol = user.Rol,
                 Usuario = user.Nombre,
                 Estado = user.Estado
