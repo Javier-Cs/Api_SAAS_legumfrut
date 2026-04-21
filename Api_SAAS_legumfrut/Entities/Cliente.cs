@@ -10,11 +10,12 @@
         public string? CedulaRuc { get; set; }
         public string? Email { get; set; }
         public string? Tipo { get; set; }
-
+ 
         public bool Estado { get; set; } = true;
         public bool IsDeleted { get; set; } = false;
 
         public DateTime FechaCreacion { get; set; }
+        //public DateTime FechaActualizacion { get; set; }
         public DateTime? FechaEliminacion { get; set; }
         public int? IdUsuarioEliminacion { get; set; }
 
